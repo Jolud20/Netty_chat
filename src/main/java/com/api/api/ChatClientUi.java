@@ -8,8 +8,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -23,27 +21,19 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Scanner;
-
 public class ChatClientUi extends Application {
     private static final String Host = "localhost";
-    private static final int Port = 9001;
+    private static final int Port = 9000;
 
     private TextArea messages;
     private TextField input;
     private Button sendButton;
     private TextField name;
     private Button connectButton;
-
-    private ChatClientHandler handler;
     private Channel channel;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage){
         //Создание каркасса
         BorderPane pane = new BorderPane();
         Font font = Font.font("Arial", FontWeight.BOLD, 14);
@@ -92,25 +82,23 @@ public class ChatClientUi extends Application {
         primaryStage.show();
     }
 
-    //Настраивает отображение выпадающего окна
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
+    private void showAlert() {
         Platform.runLater(() -> {
-            Alert alert = new Alert(alertType);
-            alert.setTitle(title);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Ошибка имени пользователя");
             alert.setHeaderText(null);
-            alert.setContentText(message);
+            alert.setContentText("Имя пользователя не может быть пустым");
             alert.showAndWait();
         });
     }
 
-    //подключение к серверу
     private void connectToServer() {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             String name = this.name.getText();
             if (name.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Ошибка имени пользователя",
-                        "Имя пользователя не может быть пустым");
+                showAlert(
+                );
                 System.out.println("Имя не может быть пустым.");
                 return;
             }
@@ -119,7 +107,7 @@ public class ChatClientUi extends Application {
                     .channel(NioSocketChannel.class)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
+                        public void initChannel(SocketChannel ch){
                             ChannelPipeline pipeline = ch.pipeline();
                             pipeline.addLast(new StringDecoder());
                             pipeline.addLast(new StringEncoder());
@@ -146,6 +134,6 @@ public class ChatClientUi extends Application {
         }
     }
     void appendMessage(String message) {
-        Platform.runLater(() -> messages.appendText(message));
+        Platform.runLater(() -> messages.appendText("\n" + message));
     }
 }

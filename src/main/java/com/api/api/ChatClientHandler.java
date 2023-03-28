@@ -12,7 +12,7 @@ public class ChatClientHandler extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, String msg){
         System.out.println(msg);
         ui.appendMessage(msg);
     }

@@ -11,7 +11,7 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<String> {
     private static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     @Override
-    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+    public void handlerAdded(ChannelHandlerContext ctx){
         Channel incoming = ctx.channel();
         for (Channel channel : channels) {
             channel.write("[SERVER] - " + incoming.remoteAddress() + " has joined!");
@@ -20,7 +20,7 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
-    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+    public void handlerRemoved(ChannelHandlerContext ctx){
         Channel incoming = ctx.channel();
         for (Channel channel : channels) {
             channel.write("[SERVER] - " + incoming.remoteAddress() + " покинул нас!");
@@ -29,7 +29,7 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, String message) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, String message){
         Channel incoming = ctx.channel();
         for (Channel channel : channels) {
             if (channel != incoming) {
@@ -41,13 +41,13 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx){
         Channel incoming = ctx.channel();
         System.out.println("ChatClient:" + incoming.remoteAddress() + " подключился.");
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    public void channelInactive(ChannelHandlerContext ctx){
         Channel incoming = ctx.channel();
         System.out.println("ChatClient:" + incoming.remoteAddress() + " покинул нас.");
     }
